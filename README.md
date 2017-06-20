@@ -1,4 +1,11 @@
 # react-native-libvr-demo
+
+If you want to generate a brand new react-native project, run the following command
+### react-native init ReactNativeLibVRDemo --version 0.44.0
+Normally, you should run 
+### react-native init ReactNativeLibVRDemo
+to generate a react-native project, but above command will init a react-native-0.45.0 project at the moment I write this doc, unfortunately react-native-0.45.0 has a bug and cannot build.
+
 ## How to run this demo
 git clone https://github.com/sqvcnet/react-native-libvr-demo.git
 
