@@ -4,8 +4,9 @@
 #### git clone https://github.com/sqvcnet/react-native-libvr-demo.git
 #### cd react-native-libvr-demo
 #### npm install --save
-#### cd ios
+#### cd node_modules/react-native-libvr/ios
 #### pod install
+#### in project "Build Phrases" add "VideoToolbox.framework, libz.dylib, GLKit.framework" in "Link Binary with Libraries" 
 #### react-native run-ios
 
 If you want to run this demo on your iOS device, open the ios/ReactNativeLibvrDemo.xcodeproj and config the iOS Developer Program options (check the "Automatically manage signing" and select your Team in the Xcode project General page may be the easiest way), then press Command+R 
