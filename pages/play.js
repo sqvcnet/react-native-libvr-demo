@@ -360,6 +360,10 @@ export default class Play extends Show {
                 <StatusBar hidden={!this.state.showControl} barStyle="light-content" animated={false}
                            translucent={true}/>
 
+                <TouchableHighlight onPress={() => {
+                    this._onPressPlayer();
+                }}>
+                <View>
                 <VRPlayer
                     ref="vrplayer"
                     key={'play'}
@@ -412,12 +416,9 @@ export default class Play extends Show {
                     }}
                 >
                 </VRPlayer>
+                </View>
+                </TouchableHighlight>
 
-                {/*<TouchableHighlight onPress={() => {*/}
-                {/*this._onPressPlayer();*/}
-                {/*}}>*/}
-
-                {/*</TouchableHighlight>*/}
                 <View style={topStyle}>
                     <TouchableOpacity style={{width: 50, height: 30}} onPress={() => {
                         this.returnList();
