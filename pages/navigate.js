@@ -18,23 +18,15 @@ export default class Navigate extends Component {
         super(props);
         this.props = props;
         this.state = {};
-        this.state.page = null;
         this.state.index = 0;
-        this.state.needLock = true;
     }
 
-    navigate() {
+    render() {
         switch (this.state.index) {
             case 0:
-                if (this.state.needLock == true) {
-                    //进入其它页面的时候不应该对最下面的List页面锁屏
-                    //只有回到List页面时才需要锁屏
-                    OrientationPack.lockToPortrait();
-                } else {
-                    this.state.needLock = true;
-                }
                 return <List
                     onForward={ (movie) => {
+                        OrientationPack.lockToLandscape();
                         this.setState({index: 1, param: movie});
                     }
                     }
@@ -45,7 +37,7 @@ export default class Navigate extends Component {
                     movie={this.state.param}
                     onBack={ () => {
                         OrientationPack.lockToPortrait();
-                        this.setState({needLock: false, index: 0});
+                        this.setState({index: 0});
                     }}
                 />;
                 break;
@@ -53,27 +45,4 @@ export default class Navigate extends Component {
                 break;
         }
     }
-
-    render() {
-        return this.navigate();
-    }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
-});

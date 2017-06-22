@@ -43,11 +43,11 @@ export default class Play extends Show {
         this.state.progress = 0.0;
         this.state.cacheProgress = 0.0;
         this.state.progressPercent = Math.abs(0.000001).toFixed(2);
-        this.state.mode = 4;
+        this.state.mode = 3;
         this.state.resolution = '标清';
 
         this.movie = this.props.movie;
-        this.state.uri = this.movie.resolutions['1080P'];
+        this.state.uri = this.movie.resolutions['480P'];
 
         this.isReturned = false;
 
