@@ -9,8 +9,8 @@ import {
     AppRegistry,
 } from 'react-native';
 
-import Common from './Common';
-import Navigate from './navigate';
+import Common from './modules/Common';
+import Navigate from './pages/navigate';
 
 export default class ReactNativeLibVRDemo extends Component {
     render() {

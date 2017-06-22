@@ -16,7 +16,9 @@
 		0B00BA581EFA5F66001C5DD9 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B00BA3A1EFA5EC2001C5DD9 /* VideoToolbox.framework */; };
 		0B00BA6B1EFA6913001C5DD9 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B00BA6A1EFA6913001C5DD9 /* libz.1.dylib */; };
 		0B401C1E1EFA895700529D11 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B401C1D1EFA895700529D11 /* GLKit.framework */; };
-		0BF91A221EF976D10065F7CF /* libRNVRPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BF91A1B1EF971CD0065F7CF /* libRNVRPlayer.a */; };
+		0B98C5121EFB70F80095364F /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B065B2F1EFA260500DAD52E /* libRCTOrientation.a */; };
+		0B98C52D1EFB70FE0095364F /* libKCKeepAwake.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B065B101EFA25E700DAD52E /* libKCKeepAwake.a */; };
+		0B98C5351EFB9EAF0095364F /* libRNVRPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B98C5341EFB9EA50095364F /* libRNVRPlayer.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -99,9 +101,9 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RCTOrientation;
 		};
-		0BF91A1A1EF971CD0065F7CF /* PBXContainerItemProxy */ = {
+		0B98C5331EFB9EA50095364F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0BF91A161EF971CD0065F7CF /* RNVRPlayer.xcodeproj */;
+			containerPortal = 0B98C52E1EFB9EA50095364F /* RNVRPlayer.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 0BF91A0A1EF970C30065F7CF;
 			remoteInfo = RNVRPlayer;
@@ -271,7 +273,7 @@
 		0B065B0B1EFA25E600DAD52E /* KCKeepAwake.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KCKeepAwake.xcodeproj; path = "../node_modules/react-native-keep-awake/ios/KCKeepAwake.xcodeproj"; sourceTree = "<group>"; };
 		0B065B2A1EFA260500DAD52E /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
 		0B401C1D1EFA895700529D11 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
-		0BF91A161EF971CD0065F7CF /* RNVRPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVRPlayer.xcodeproj; path = "../node_modules/react-native-libvr/ios/RNVRPlayer.xcodeproj"; sourceTree = "<group>"; };
+		0B98C52E1EFB9EA50095364F /* RNVRPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVRPlayer.xcodeproj; path = "../node_modules/react-native-libvr/ios/RNVRPlayer.xcodeproj"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReactNativeLibVRDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativeLibVRDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -302,10 +304,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B98C5351EFB9EAF0095364F /* libRNVRPlayer.a in Frameworks */,
+				0B98C52D1EFB70FE0095364F /* libKCKeepAwake.a in Frameworks */,
+				0B98C5121EFB70F80095364F /* libRCTOrientation.a in Frameworks */,
 				0B401C1E1EFA895700529D11 /* GLKit.framework in Frameworks */,
 				0B00BA6B1EFA6913001C5DD9 /* libz.1.dylib in Frameworks */,
 				0B00BA581EFA5F66001C5DD9 /* VideoToolbox.framework in Frameworks */,
-				0BF91A221EF976D10065F7CF /* libRNVRPlayer.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -431,10 +435,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0BF91A171EF971CD0065F7CF /* Products */ = {
+		0B98C52F1EFB9EA50095364F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0BF91A1B1EF971CD0065F7CF /* libRNVRPlayer.a */,
+				0B98C5341EFB9EA50095364F /* libRNVRPlayer.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -507,9 +511,9 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0B98C52E1EFB9EA50095364F /* RNVRPlayer.xcodeproj */,
 				0B065B2A1EFA260500DAD52E /* RCTOrientation.xcodeproj */,
 				0B065B0B1EFA25E600DAD52E /* KCKeepAwake.xcodeproj */,
-				0BF91A161EF971CD0065F7CF /* RNVRPlayer.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -727,8 +731,8 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = 0BF91A171EF971CD0065F7CF /* Products */;
-					ProjectRef = 0BF91A161EF971CD0065F7CF /* RNVRPlayer.xcodeproj */;
+					ProductGroup = 0B98C52F1EFB9EA50095364F /* Products */;
+					ProjectRef = 0B98C52E1EFB9EA50095364F /* RNVRPlayer.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -791,11 +795,11 @@
 			remoteRef = 0B065B2E1EFA260500DAD52E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0BF91A1B1EF971CD0065F7CF /* libRNVRPlayer.a */ = {
+		0B98C5341EFB9EA50095364F /* libRNVRPlayer.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNVRPlayer.a;
-			remoteRef = 0BF91A1A1EF971CD0065F7CF /* PBXContainerItemProxy */;
+			remoteRef = 0B98C5331EFB9EA50095364F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {
