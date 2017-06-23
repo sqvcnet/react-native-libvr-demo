@@ -26,6 +26,10 @@ export default class Util {
         '九': true,
         '十': true,
         '百': true
+    };
+
+    static clone(o) {
+        return JSON.parse(JSON.stringify(o));
     }
 
     static toInt(str) {

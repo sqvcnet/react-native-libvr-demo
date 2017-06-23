@@ -43,15 +43,16 @@ export default class Play extends Show {
         this.state.progress = 0.0;
         this.state.cacheProgress = 0.0;
         this.state.progressPercent = Math.abs(0.000001).toFixed(2);
-        this.state.mode = 3;
-        this.state.resolution = '标清';
+        this.state.mode = VRPlayer.MODE_3D;
+        this.state.codec = VRPlayer.CODEC_HARD;
+        this.state.resolution = '480P';
 
         this.movie = this.props.movie;
-        this.state.uri = this.movie.resolutions['480P'];
+        this.state.uri = this.movie.resolutions[this.state.resolution];
 
         this.isReturned = false;
 
-        this.modeArr = ['3d', '360', '360上下', '3d左右', '360单屏'];
+        this.modeArr = ['3D', '360', '360上下', '3D左右', '360单屏'];
         this.codecArr = ['软解', '硬解'];
     }
 
@@ -69,8 +70,12 @@ export default class Play extends Show {
 
     openAndPlay() {
         var self = this;
-        this.refs.vrplayer.open(this.state.uri, () => {
-            self.refs.vrplayer.play();
+        this.refs.vrplayer.setCodec(this.state.codec, () => {
+            self.refs.vrplayer.open(this.state.uri, () => {
+                self.refs.vrplayer.setMode(this.state.mode, () => {
+                    self.refs.vrplayer.play();
+                });
+            });
         });
     }
 
@@ -108,33 +113,37 @@ export default class Play extends Show {
     changeMode(newMode) {
         var v = VRPlayer.MODE_360;
         switch (newMode) {
-            case '3d':
+            case '3D':
                 v = VRPlayer.MODE_3D;
                 break;
             case '360上下':
-                v = 2;
+                v = VRPlayer.MODE_360_UP_DOWN;
                 break;
-            case '3d左右':
-                v = 3;
+            case '3D左右':
+                v = VRPlayer.MODE_3D_LEFT_RIGHT;
                 break;
             case '360单屏':
-                v = 4;
+                v = VRPlayer.MODE_360_SINGLE;
                 break;
         }
         this.setState({showModes: false}, () => {
-            this.refs.vrplayer.setMode(v);
+            this.setState({mode: v}, () => {
+                this.refs.vrplayer.setMode(v);
+            });
         });
     }
 
     changeCodec(value) {
-        var v = 1;
+        var v = VRPlayer.CODEC_HARD;
         switch (value) {
             case '软解':
-                v = 0;
+                v = VRPlayer.CODEC_SOFT;
                 break;
         }
         this.setState({showCodecs: false}, () => {
-            this.refs.vrplayer.setCodec(v);
+            this.setState({codec: v}, () => {
+                this.refs.vrplayer.setCodec(v);
+            });
         });
     }
 
@@ -194,7 +203,7 @@ export default class Play extends Show {
         );
 
         if (this.state.showModes) {
-            var modes = ['3d', '360', '360上下', '3d左右', '360单屏'];
+            var modes = Util.clone(this.modeArr);
             modes.splice(modes.indexOf(mode1), 1);
             for (var i in modes) {
                 var mode = modes[i];
@@ -366,51 +375,38 @@ export default class Play extends Show {
                 <View>
                 <VRPlayer
                     ref="vrplayer"
-                    key={'play'}
+                    key={'need be included by a View to suppress React-Native error'}
                     style={stylePlayer}
-                    src={this.state.uri}
-                    play={this.state.play}
-                    pauseRenderer={this.state.pauseRenderer}
-                    close={this.state.close}
-                    seek={this.state.seek}
-                    codec={this.state.codec}
-                    mode={this.state.mode}
-                    rotateDegree={this.state.rotateDegree}
-                    degree={this.state.degree}
-                    onChange={(event: Event) => {
-                        if (event.nativeEvent.message == 'onPause') {
+                    onChange={(nativeEvent) => {
+                        if (nativeEvent.message == 'onPause') {
                             console.log('onPause in play');
-                            this.setState({play: false, pauseRenderer: true});
-                        } else if (event.nativeEvent.message == 'onResume') {
+                            var self = this;
+                            this.refs.vrplayer.pause(() => {
+                                self.refs.vrplayer.close(() => {
+                                    self.refs.vrplayer.pauseRenderer();
+                                });
+                            });
+                        } else if (nativeEvent.message == 'onResume') {
                             console.log('onResume in play');
                             this.setState({
-                                play: true,
                                 showControl: 0.0,
-                                pauseRenderer: false,
-                                seek: this.state.progress
-                            });
-                        } else if (event.nativeEvent.message == 'onProgress') {
-                            //console.log('onProgress in show');
-                            this.playerDelegate.updateProgress(event.nativeEvent, (isEnd) => {
-                                if (isEnd) {
-                                    console.log("play end, return list");
-                                    //服务端收到该请求后应该将this.movie.title置为已观看完状态，注意对应设备ID和对应手机号都应该置
-                                    var self = this;
-
-                                    Common.getNextVideo(this.movie.title, (movie) => {
-                                        if (movie) {
-                                            this.playerDelegate.close(() => {
-                                                self.movie = movie;
-                                                self.state.inited = false;
-                                                self.openAndPlay();
-                                            });
-                                        } else {
-                                            //self.props.onBack();
-                                            self.playerDelegate.pause();
-                                        }
+                            }, () => {
+                                var self = this;
+                                this.refs.vrplayer.playRenderer(() => {
+                                    self.refs.vrplayer.open(this.state.uri, () => {
+                                        self.refs.vrplayer.seek(this.state.progress, () => {
+                                            self.refs.vrplayer.play();
+                                        });
                                     });
-                                }
+                                });
                             });
+                        } else if (nativeEvent.message == 'onProgress') {
+                            //console.log('onProgress in show');
+                            {/*this.playerDelegate.updateProgress(nativeEvent, (isEnd) => {*/}
+                                {/*if (isEnd) {*/}
+                                    {/*console.log("play end, return list");*/}
+                                {/*}*/}
+                            {/*});*/}
                         } else {
                         }
                     }}
