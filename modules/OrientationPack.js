@@ -24,7 +24,7 @@ export default class OrientationPack {
     }
 
     static lockToLandscape() {
-        if (Common.system == 'android') {
+        if (Common.platform == 'android') {
             Orientation.getOrientation((error, orientation) => {
                 if (orientation != 'PORTRAIT') {
                     Orientation.lockToPortrait();

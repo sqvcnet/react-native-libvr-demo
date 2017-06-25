@@ -27,7 +27,12 @@ export default class Navigate extends Component {
                 return <List
                     onForward={ (movie) => {
                         OrientationPack.lockToLandscape();
-                        this.setState({index: 1, param: movie});
+                        // react-native-orientation has no callback to decide when the lock finish
+                        // so use a timeout to repair.
+                        // For production, you maybe need to modify the Orientation.m source code.
+                        setTimeout(() => {
+                            this.setState({index: 1, param: movie});
+                        }, 500);
                     }
                     }
                 />;

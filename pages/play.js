@@ -38,17 +38,15 @@ export default class Play extends Show {
         this.state.showControl = 0.0;
         this.state.showLoading = 0.0;
         this.state.play = false;
-        this.state.pauseRenderer = false;
         this.state.close = false;
         this.state.progress = 0.0;
         this.state.cacheProgress = 0.0;
-        this.state.progressPercent = Math.abs(0.000001).toFixed(2);
-        this.state.mode = VRPlayer.MODE_3D;
+        this.state.mode = VRPlayer.MODE_360_UP_DOWN;
         this.state.codec = VRPlayer.CODEC_HARD;
         this.state.resolution = '480P';
+        this.state.totalTime = -1.0;
 
         this.movie = this.props.movie;
-        this.state.uri = this.movie.resolutions[this.state.resolution];
 
         this.isReturned = false;
 
@@ -69,11 +67,25 @@ export default class Play extends Show {
     }
 
     openAndPlay() {
+        this.state.uri = this.movie.resolutions[this.state.resolution];
+
+        this.setState({play: false, showLoading: 0.6});
         var self = this;
-        this.refs.vrplayer.setCodec(this.state.codec, () => {
-            self.refs.vrplayer.open(this.state.uri, () => {
-                self.refs.vrplayer.setMode(this.state.mode, () => {
-                    self.refs.vrplayer.play();
+        var vrplayer = this.refs.vrplayer;
+        vrplayer.close(() => {
+            vrplayer.setCodec(this.state.codec, () => {
+                vrplayer.open(this.state.uri, (err) => {
+                    if (err != "") {
+                        Alert.alert("open video error: " + err);
+                        return;
+                    }
+                    // vrplayer.playRenderer(() => {
+                        vrplayer.setMode(this.state.mode, () => {
+                            vrplayer.play(() => {
+                                self.setState({play: true, showLoading: 0.0});
+                            });
+                        });
+                    // });
                 });
             });
         });
@@ -106,7 +118,9 @@ export default class Play extends Show {
 
     changeResolution(newResolution) {
         this.setState({showResolutions: false}, () => {
-            this.refs.vrplayer.setResolution(newResolution);
+            this.setState({resolution: newResolution}, () => {
+                this.openAndPlay();
+            });
         });
     }
 
@@ -162,7 +176,7 @@ export default class Play extends Show {
         );
 
         if (this.state.showResolutions) {
-            var resolutions = JSON.parse(JSON.stringify(Object.keys(this.movie.resolutions)));
+            var resolutions = Util.clone(Object.keys(this.movie.resolutions));
             resolutions.splice(resolutions.indexOf(resolution1), 1);
             var idx = resolutions.indexOf('极致高清');
             if (idx >= 0) {
@@ -266,11 +280,6 @@ export default class Play extends Show {
         var wndSize = Dimensions.get('window');
         var width = wndSize.width;
         var height = wndSize.height;
-        if (height > width) {
-            var tmp = height;
-            height = width;
-            width = tmp;
-        }
         var topHeight = 30;
         var bottomHeight = 40;
         var centerHeight = height - topHeight - bottomHeight - 26;
@@ -378,35 +387,10 @@ export default class Play extends Show {
                     key={'need be included by a View to suppress React-Native error'}
                     style={stylePlayer}
                     onChange={(nativeEvent) => {
-                        if (nativeEvent.message == 'onPause') {
-                            console.log('onPause in play');
-                            var self = this;
-                            this.refs.vrplayer.pause(() => {
-                                self.refs.vrplayer.close(() => {
-                                    self.refs.vrplayer.pauseRenderer();
-                                });
+                        if (nativeEvent.message == 'onProgress') {
+                            this.updateProgress(nativeEvent, (isEnd) => {
+
                             });
-                        } else if (nativeEvent.message == 'onResume') {
-                            console.log('onResume in play');
-                            this.setState({
-                                showControl: 0.0,
-                            }, () => {
-                                var self = this;
-                                this.refs.vrplayer.playRenderer(() => {
-                                    self.refs.vrplayer.open(this.state.uri, () => {
-                                        self.refs.vrplayer.seek(this.state.progress, () => {
-                                            self.refs.vrplayer.play();
-                                        });
-                                    });
-                                });
-                            });
-                        } else if (nativeEvent.message == 'onProgress') {
-                            //console.log('onProgress in show');
-                            {/*this.playerDelegate.updateProgress(nativeEvent, (isEnd) => {*/}
-                                {/*if (isEnd) {*/}
-                                    {/*console.log("play end, return list");*/}
-                                {/*}*/}
-                            {/*});*/}
                         } else {
                         }
                     }}
@@ -416,13 +400,13 @@ export default class Play extends Show {
                 </TouchableHighlight>
 
                 <View style={topStyle}>
-                    <TouchableOpacity style={{width: 50, height: 30}} onPress={() => {
+                    <TouchableHighlight style={{width: 50, height: 30}} onPress={() => {
                         this.returnList();
                     }}>
                         <Image style={{width: 30, height: 30, margin: 0, marginLeft: 10, marginRight: 10}}
                                source={require('../icons/return.png')}>
                         </Image>
-                    </TouchableOpacity>
+                    </TouchableHighlight>
                     {info}
                 </View>
                 <Slider
@@ -432,7 +416,7 @@ export default class Play extends Show {
                     step={1}
                     value={this.state.rotateDegree}
                     onValueChange={(value) => {
-                        this.playerDelegate.setRotateDegree(value);
+                        this.refs.vrplayer.setRotateDegree(value);
                     }}
                 />
                 <Image
@@ -448,13 +432,19 @@ export default class Play extends Show {
                     step={1}
                     value={this.state.degree}
                     onValueChange={(value) => {
-                        this.playerDelegate.setDegree(value);
+                        this.refs.vrplayer.setDegree(value);
                     }}
                 />
 
                 <View style={bottomStyle}>
                     <TouchableOpacity style={{width: 40, height: 40}} onPress={() => {
-                        this.state.play ? this.setState({play: false}) : this.setState({play: true});
+                        if (this.state.play) {
+                            this.state.play = false;
+                            this.refs.vrplayer.pause();
+                        } else {
+                            this.state.play = true;
+                            this.refs.vrplayer.play();
+                        }
                     }}>
                         <Image style={{width: 30, height: 30, margin: 5}} source={
                             this.state.play ? require('../icons/pause.png') : require('../icons/play.png')
@@ -472,14 +462,10 @@ export default class Play extends Show {
                         step={0.01}
                         value={this.state.progress}
                         onValueChange={(value) => {
-                            this.state.seeking = true;
-                            this.setState({progress: value});
+                            {/*this.setState({progress: value});*/}
                         }}
                         onSlidingComplete={(value) => {
-                            this.playerDelegate.seek(value);
-                            setTimeout(() => {
-                                this.state.seeking = false;
-                            }, 200);
+                            this.refs.vrplayer.seek(value);
                         }}
                     />
                     <Text
@@ -498,6 +484,61 @@ export default class Play extends Show {
                 </View>
             </View>
         );
+    }
+
+    updateProgress(json, cbEnd) {
+        if (json.error < 0) {
+            var err = '解码出错啦！请确保网络稳定，尝试切换软解或硬解，同时降低分辨率。错误码：' + json.error;
+            Alert.alert(err);
+            return;
+        }
+        if (json.progress >= 1.0) {
+            cbEnd(true);
+            return;
+        }
+
+        if (json.cacheProgress <= -1.0) {
+            if (this.state.play) {
+                this.setState({showLoading: 0.6});
+            }
+        }
+
+        if (json.progress > 0.0) {
+            this.setState({progress: json.progress});
+        }
+        if (json.totalTime > 0.0) {
+            if (this.state.totalTime < 0.0) {
+                this.setState({totalTime: json.totalTime});
+            }
+        }
+        if (json.cacheProgress > 0.0 && json.cacheProgress < 1.0) {
+            this.setState({cacheProgress: json.cacheProgress});
+            if (json.cacheProgress * json.totalTime -
+                json.progress * json.totalTime <
+                1.0) {
+                //show loading when cached time less than 1 second
+                if (this.state.play) {
+                    if (this.state.showLoading == 0.0) {
+                        this.setState({showLoading: 0.6}, () => {
+                            this.refs.vrplayer.pause();
+                        });
+                    }
+                }
+            }
+            if (json.cacheProgress * json.totalTime -
+                json.progress * json.totalTime >
+                3.0) {
+                //hide loading when cached time greater than 3 second
+                if (this.state.play) {
+                    if (this.state.showLoading == 0.6) {
+                        this.setState({showLoading: 0.0}, () => {
+                            this.refs.vrplayer.play();
+                        });
+                    }
+                }
+            }
+        }
+        cbEnd(false);
     }
 }
 
