@@ -388,8 +388,14 @@ export default class Play extends Show {
                     style={stylePlayer}
                     onChange={(nativeEvent) => {
                         if (nativeEvent.message == 'onProgress') {
+                            if (this.state.seeking) {
+                                return;
+                            }
+                            var self = this;
                             this.updateProgress(nativeEvent, (isEnd) => {
-
+                                if (isEnd) {
+                                    self.refs.vrplayer.close();
+                                }
                             });
                         } else {
                         }
@@ -400,13 +406,13 @@ export default class Play extends Show {
                 </TouchableHighlight>
 
                 <View style={topStyle}>
-                    <TouchableHighlight style={{width: 50, height: 30}} onPress={() => {
+                    <TouchableOpacity style={{width: 50, height: 30}} onPress={() => {
                         this.returnList();
                     }}>
                         <Image style={{width: 30, height: 30, margin: 0, marginLeft: 10, marginRight: 10}}
                                source={require('../icons/return.png')}>
                         </Image>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                     {info}
                 </View>
                 <Slider
@@ -462,10 +468,12 @@ export default class Play extends Show {
                         step={0.01}
                         value={this.state.progress}
                         onValueChange={(value) => {
-                            {/*this.setState({progress: value});*/}
+                            this.state.seeking = true;
                         }}
                         onSlidingComplete={(value) => {
-                            this.refs.vrplayer.seek(value);
+                            this.refs.vrplayer.seek(value, () => {
+                                this.state.seeking = false;
+                            });
                         }}
                     />
                     <Text
