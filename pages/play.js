@@ -37,6 +37,8 @@ export default class Play extends Show {
         this.state = {};
         this.state.showControl = 0.0;
         this.state.showLoading = 0.0;
+        this.state.degree = 110;
+        this.state.rotateDegree = 5;
         this.state.play = false;
         this.state.close = false;
         this.state.progress = 0.0;
@@ -79,13 +81,16 @@ export default class Play extends Show {
                         Alert.alert("open video error: " + err);
                         return;
                     }
-                    // vrplayer.playRenderer(() => {
-                        vrplayer.setMode(this.state.mode, () => {
-                            vrplayer.play(() => {
-                                self.setState({play: true, showLoading: 0.0});
+
+                    vrplayer.setDegree(this.state.degree, () => {
+                        vrplayer.setRotateDegree(this.state.rotateDegree, () => {
+                            vrplayer.setMode(this.state.mode, () => {
+                                vrplayer.play(() => {
+                                    self.setState({play: true, showLoading: 0.0});
+                                });
                             });
                         });
-                    // });
+                    });
                 });
             });
         });
@@ -381,28 +386,30 @@ export default class Play extends Show {
                 <TouchableHighlight onPress={() => {
                     this._onPressPlayer();
                 }}>
-                <View>
-                <VRPlayer
-                    ref="vrplayer"
-                    key={'need be included by a View to suppress React-Native error'}
-                    style={stylePlayer}
-                    onChange={(nativeEvent) => {
-                        if (nativeEvent.message == 'onProgress') {
-                            if (this.state.seeking) {
-                                return;
-                            }
-                            var self = this;
-                            this.updateProgress(nativeEvent, (isEnd) => {
-                                if (isEnd) {
-                                    self.refs.vrplayer.close();
+                    <View>
+                        <VRPlayer
+                            ref="vrplayer"
+                            key={'need be included by a View to suppress React-Native error'}
+                            style={stylePlayer}
+                            onChange={(nativeEvent) => {
+                                if (nativeEvent.message == 'onProgress') {
+                                    if (this.state.seeking) {
+                                        return;
+                                    }
+                                    var self = this;
+                                    this.updateProgress(nativeEvent, (isEnd) => {
+                                        if (isEnd) {
+                                            self.refs.vrplayer.close(() => {
+                                                self.returnList();
+                                            });
+                                        }
+                                    });
+                                } else {
                                 }
-                            });
-                        } else {
-                        }
-                    }}
-                >
-                </VRPlayer>
-                </View>
+                            }}
+                        >
+                        </VRPlayer>
+                    </View>
                 </TouchableHighlight>
 
                 <View style={topStyle}>
