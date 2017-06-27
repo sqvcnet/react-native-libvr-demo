@@ -9,7 +9,7 @@
 #### npm install --save
 ### For iOS
 #### open ios/ReactNativeLibVRDemo.xcodeproj in Xcode
-#### on project "Build Phrases" add "CoreMotion.framework, VideoToolbox.framework, libz.dylib, GLKit.framework" in "Link Binary with Libraries" 
+#### on project "Build Phrases" add "CoreMedia.framework, AudioToolbox.framework, VideoToolbox.framework, libz.dylib, libc++.dylib, GLKit.framework" in "Link Binary with Libraries" 
 #### config the iOS Developer Program options (check the "Automatically manage signing" and select your Team in the Xcode project General page may be the easiest way)
 #### press Command+R 
 ### For Android
