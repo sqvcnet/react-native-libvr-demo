@@ -27,9 +27,11 @@ import {
     Modal
 } from 'react-native';
 
-require('../imgs/WeiLaiTiYu3D.jpg');
-//ffmpeg -hwaccel videotoolbox -i WeiLaiTiYu3D.x264_1080p.mp4 -vf "scale=480:-2" -c:v libx264 -profile:v main -level 1 -c:a libfdk_aac -b:v 120k -b:a 30k WeiLaiTiYu3D.x264_480x480.mp4
-require('../movies/WeiLaiTiYu3D.x264_480x480.mp4');
+require('../imgs/GongKeJiDongDui3D.jpg');
+
+//ffmpeg -i GongKeJiDongDui3D.mp4 -vf "scale=1920:-2" -c:v libx264 -c:a libfdk_aac -b:a 30k -b:v 3170k -ss 00:00:00.0 -t 00:00:30.0 GongKeJiDongDui3D.1080P.mp4
+require('../movies/GongKeJiDongDui3D.4K.mp4');
+require('../movies/GongKeJiDongDui3D.1080P.mp4');
 export default class List extends Component {
     static propTypes = {
         onForward: PropTypes.func.isRequired,
@@ -38,11 +40,11 @@ export default class List extends Component {
     videos() {
         return [
             {
-                title: "未来体育3D",
-                img: "./assets/imgs/WeiLaiTiYu3D.jpg",
+                title: "攻壳机动队3D",
+                img: "./assets/imgs/GongKeJiDongDui3D.jpg",
                 resolutions: {
-                    "480P": "./assets/movies/WeiLaiTiYu3D.x264_480x480.mp4",
-                    "1080P": "http://east2.oss-cn-shanghai.aliyuncs.com/%E5%BF%85%E7%9C%8B/%E6%9C%AA%E6%9D%A5%E4%BD%93%E8%82%B23D/1456132699.x264_1080p.mp4"
+                    "1080P": "./assets/movies/GongKeJiDongDui3D.1080P.mp4",
+                    "4K高清": "./assets/movies/GongKeJiDongDui3D.4K.mp4"
                 }
             }
         ];

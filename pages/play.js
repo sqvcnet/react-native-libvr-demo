@@ -35,6 +35,10 @@ export default class Play extends Show {
         super(props);
         this.props = props;
         this.state = {};
+        this.init();
+    }
+
+    init() {
         this.state.showControl = 0.0;
         this.state.showLoading = 0.0;
         this.state.degree = 110;
@@ -45,7 +49,7 @@ export default class Play extends Show {
         this.state.cacheProgress = 0.0;
         this.state.mode = VRPlayer.MODE_360_UP_DOWN;
         this.state.codec = VRPlayer.CODEC_HARD;
-        this.state.resolution = '480P';
+        this.state.resolution = '1080P';
         this.state.totalTime = -1.0;
 
         this.movie = this.props.movie;
@@ -81,7 +85,8 @@ export default class Play extends Show {
                         Alert.alert("open video error: " + err);
                         return;
                     }
-
+                    this.state.progress = 0.0;
+                    this.state.totalTime = -1.0;
                     vrplayer.setDegree(this.state.degree, () => {
                         vrplayer.setRotateDegree(this.state.rotateDegree, () => {
                             vrplayer.setMode(this.state.mode, () => {
@@ -399,9 +404,11 @@ export default class Play extends Show {
                                     var self = this;
                                     this.updateProgress(nativeEvent, (isEnd) => {
                                         if (isEnd) {
-                                            self.refs.vrplayer.close(() => {
-                                                self.returnList();
-                                            });
+                                            if (self.state.play) {
+                                                self.refs.vrplayer.pause(() => {
+                                                    self.state.play = false;
+                                                });
+                                            }
                                         }
                                     });
                                 } else {
@@ -503,12 +510,8 @@ export default class Play extends Show {
 
     updateProgress(json, cbEnd) {
         if (json.error < 0) {
-            var err = '解码出错啦！请确保网络稳定，尝试切换软解或硬解，同时降低分辨率。错误码：' + json.error;
+            var err = 'Play error! Error code: ' + json.error;
             Alert.alert(err);
-            return;
-        }
-        if (json.progress >= 1.0) {
-            cbEnd(true);
             return;
         }
 
@@ -553,7 +556,12 @@ export default class Play extends Show {
                 }
             }
         }
-        cbEnd(false);
+
+        if (json.progress >= 1.0) {
+            cbEnd(true);
+        } else {
+            cbEnd(false);
+        }
     }
 }
 
